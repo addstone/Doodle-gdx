@@ -164,7 +164,7 @@ public class PlayerEntity extends Entity implements InputProcessor
                 case Input.Keys.D:
                     setAngle(getAngle() + turnSpeed);
                     break;
-                case Input.Keys.E:
+                case Input.Keys.SPACE:
                     shoot();
                     break;
             }

@@ -15,9 +15,11 @@ public class Room
 {
     private List<Entity> entities;
     private Sprite background;
+    private Dimension size;
 
-    public Room() {
+    public Room(int width, int height) {
         this.entities = new CopyOnWriteArrayList<>();
+        this.size = new Dimension(width, height);
     }
 
     public void sortEntitiesByDepth() {
@@ -82,5 +84,10 @@ public class Room
         }
 
         entities = null;
+    }
+
+    public Dimension getSize()
+    {
+        return size;
     }
 }

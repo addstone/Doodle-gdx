@@ -11,7 +11,7 @@ public class TestRoom extends Room
 {
     public TestRoom()
     {
-        super();
+        super(100, 100);
 
         Texture bgTexture = new Texture("bg-crumplesquare.png");
         bgTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
@@ -20,5 +20,7 @@ public class TestRoom extends Room
         backgroundSprite.setSize(bgTexture.getWidth() * 5, bgTexture.getHeight() * 5);
 
         setBackground(backgroundSprite);
+
+        this.addEntity(new PlayerEntity(64, 64));
     }
 }
