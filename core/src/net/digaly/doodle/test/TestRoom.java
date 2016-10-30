@@ -2,6 +2,7 @@ package net.digaly.doodle.test;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import net.digaly.doodle.ApplicationContext;
 import net.digaly.doodle.Room;
 
 /**
@@ -9,17 +10,11 @@ import net.digaly.doodle.Room;
  */
 public class TestRoom extends Room
 {
-    public TestRoom()
+    public TestRoom(ApplicationContext context)
     {
-        super(100, 100);
+        super(800, 600, context);
 
-        Texture bgTexture = new Texture("bg-crumplesquare.png");
-        bgTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-        Sprite backgroundSprite = new Sprite(bgTexture);
-        backgroundSprite.setRegion(0, 0, bgTexture.getWidth() * 5, bgTexture.getHeight() * 5);
-        backgroundSprite.setSize(bgTexture.getWidth() * 5, bgTexture.getHeight() * 5);
-
-        setBackground(backgroundSprite);
+        setBackgroundFromFilename("bg-crumplesquare.png");
 
         this.addEntity(new PlayerEntity(64, 64));
     }

@@ -1,4 +1,4 @@
-package net.digaly.doodle;
+package net.digaly.doodle.rendering;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import net.digaly.doodle.Entity;
+import net.digaly.doodle.NoRoom;
+import net.digaly.doodle.Room;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,14 +45,10 @@ public class Renderer
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
 
-        if (room.getBackground() != null)
-        {
-            room.getBackground().draw(batch);
-        }
+        room.getBackground().draw(batch);
 
         for (Entity entity : room.getEntities())
         {
-            entity.update();
             entity.getSprite().draw(batch);
         }
 

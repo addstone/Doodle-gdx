@@ -17,6 +17,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import net.digaly.doodle.Entity;
 import net.digaly.doodle.Point;
+import net.digaly.doodle.events.KeyState;
+import net.digaly.doodle.events.MouseState;
+import net.digaly.doodle.events.listeners.KeyEventListener;
+import net.digaly.doodle.events.listeners.MouseEventListener;
+import net.digaly.doodle.events.listeners.UpdateListener;
 
 
 import java.util.ArrayList;
@@ -29,7 +34,7 @@ import static javafx.scene.input.KeyCode.Z;
 /**
  * Created by Tom Dobbelaere on 2/10/2016.
  */
-public class PlayerEntity extends Entity implements InputProcessor
+public class PlayerEntity extends Entity implements KeyEventListener, UpdateListener, MouseEventListener
 {
     private double speed;
     private int turnSpeed = 5;
@@ -43,8 +48,6 @@ public class PlayerEntity extends Entity implements InputProcessor
     private int shootDelay;
     private int bulletPower;
     private double bulletSpread;
-
-    private List<Integer> heldKeys;
 
     public PlayerEntity(double x, double y)
     {
@@ -71,71 +74,17 @@ public class PlayerEntity extends Entity implements InputProcessor
         speed = 0;
         bulletPower = 360;
         bulletSpread = 360;
-
-        this.heldKeys = new ArrayList<Integer>();
     }
 
-    @Override
-    public boolean keyDown(int keycode)
+    private void shoot()
     {
-        if (!heldKeys.contains(keycode))
-            heldKeys.add(keycode);
-
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode)
-    {
-        if (heldKeys.contains(keycode))
-            heldKeys.remove((Integer) keycode);
-
-
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount)
-    {
-        return false;
-    }
-
-    private void shoot() {
-        if (shootDelay == 0) {
+        if (shootDelay == 0)
+        {
             int angleSwing;
 
-            for (int i = 0; i < bulletPower; i++) {
-                angleSwing = (int) -(bulletSpread/2) + random.nextInt((int) bulletSpread);
+            for (int i = 0; i < bulletPower; i++)
+            {
+                angleSwing = (int) -(bulletSpread / 2) + random.nextInt((int) bulletSpread);
                 getRoom().addEntity(new BulletEntity(new Sprite(spriteBullet), getSprite().getX() + 16, getSprite().getY() + 16, getAngle() + angleSwing, 10));
             }
 
@@ -144,11 +93,11 @@ public class PlayerEntity extends Entity implements InputProcessor
         }
     }
 
-    private void processInput()
+    @Override
+    public void onKeyEvent(net.digaly.doodle.events.KeyEvent keyEvent)
     {
-        for (Integer keyCode : heldKeys)
-        {
-            switch (keyCode)
+        if (keyEvent.getKeyState() == KeyState.HOLDING) {
+            switch (keyEvent.getKeyCode())
             {
                 case Input.Keys.Z:
                     speed += 0.2;
@@ -172,9 +121,8 @@ public class PlayerEntity extends Entity implements InputProcessor
     }
 
     @Override
-    public void update()
+    public void onUpdate()
     {
-        processInput();
         /*Camera camera = getRoom().getRenderer().getCamera();
         Group root = getRoom().getRenderer().getRoot();
 
@@ -225,5 +173,15 @@ public class PlayerEntity extends Entity implements InputProcessor
         getSprite().setTexture(spriteNone);
 
         if (shootDelay > 0) shootDelay -= 1;
+    }
+
+    @Override
+    public void onMouseEvent(net.digaly.doodle.events.MouseEvent mouseEvent)
+    {
+        if (mouseEvent.getMouseState() == MouseState.HOLDING) {
+            if (mouseEvent.isInBoundsOfRectangle(getSprite().getBoundingRectangle())) {
+                System.out.println(mouseEvent.getButton());
+            }
+        }
     }
 }

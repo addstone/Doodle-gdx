@@ -2,11 +2,12 @@ package net.digaly.doodle.test;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import net.digaly.doodle.Entity;
+import net.digaly.doodle.events.listeners.UpdateListener;
 
 /**
  * Created by Tom Dobbelaere on 3/10/2016.
  */
-public class BulletEntity extends Entity
+public class BulletEntity extends Entity implements UpdateListener
 {
     private int speed;
 
@@ -19,7 +20,7 @@ public class BulletEntity extends Entity
     }
 
     @Override
-    public void update()
+    public void onUpdate()
     {
         getSprite().setPosition(getSprite().getX() + (float) (Math.cos(getAngle() * 0.017) * speed),
                 getSprite().getY() + (float) (Math.sin(getAngle() * 0.017) * speed));

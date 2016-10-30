@@ -1,6 +1,11 @@
 package net.digaly.doodle;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import javafx.scene.input.MouseEvent;
+import net.digaly.doodle.events.listeners.KeyEventListener;
+import net.digaly.doodle.events.listeners.MouseEventListener;
+import net.digaly.doodle.events.listeners.UpdateListener;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -16,10 +21,13 @@ public class Room
     private List<Entity> entities;
     private Sprite background;
     private Dimension size;
+    private ApplicationContext applicationContext;
 
-    public Room(int width, int height) {
+    public Room(int width, int height, ApplicationContext context) {
         this.entities = new CopyOnWriteArrayList<>();
         this.size = new Dimension(width, height);
+        this.background = new Sprite();
+        this.applicationContext = context;
     }
 
     public void sortEntitiesByDepth() {
@@ -30,12 +38,36 @@ public class Room
         entity.setRoom(this);
         this.entities.add(entity);
 
+        if (entity instanceof KeyEventListener) {
+            applicationContext.getEventDispatcher().addKeyEventListener((KeyEventListener) entity);
+        }
+
+        if (entity instanceof MouseEventListener) {
+            applicationContext.getEventDispatcher().addMouseEventListener((MouseEventListener) entity);
+        }
+
+        if (entity instanceof UpdateListener) {
+            applicationContext.getEventDispatcher().addUpdateListener((UpdateListener) entity);
+        }
+
         sortEntitiesByDepth();
     }
 
     public void removeEntity(Entity entity) {
         entity.setRoom(new NoRoom());
         this.entities.remove(entity);
+
+        if (entity instanceof KeyEventListener) {
+            applicationContext.getEventDispatcher().removeKeyEventListener((KeyEventListener) entity);
+        }
+
+        if (entity instanceof MouseEventListener) {
+            applicationContext.getEventDispatcher().removeMouseEventListener((MouseEventListener) entity);
+        }
+
+        if (entity instanceof UpdateListener) {
+            applicationContext.getEventDispatcher().removeUpdateListener((UpdateListener) entity);
+        }
 
         sortEntitiesByDepth();
 
@@ -73,9 +105,19 @@ public class Room
         return background;
     }
 
-    public void setBackground(Sprite background)
+    public void setBackgroundFromFilename(String filename)
     {
-        this.background = background;
+        Texture backgroundTexture = new Texture(filename);
+        backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+
+        int xRepeat = (int) Math.ceil(size.getWidth() / backgroundTexture.getWidth());
+        int yRepeat = (int) Math.ceil(size.getHeight() / backgroundTexture.getHeight());
+
+        Sprite backgroundSprite = new Sprite(backgroundTexture);
+        backgroundSprite.setRegion(0, 0, backgroundTexture.getWidth() * xRepeat, backgroundTexture.getHeight() * yRepeat);
+        backgroundSprite.setSize(backgroundTexture.getWidth() * xRepeat, backgroundTexture.getHeight() * yRepeat);
+
+        this.background = backgroundSprite;
     }
 
     public void destroy() {
@@ -89,5 +131,15 @@ public class Room
     public Dimension getSize()
     {
         return size;
+    }
+
+    public ApplicationContext getApplicationContext()
+    {
+        return applicationContext;
+    }
+
+    public void setApplicationContext(ApplicationContext applicationContext)
+    {
+        this.applicationContext = applicationContext;
     }
 }
