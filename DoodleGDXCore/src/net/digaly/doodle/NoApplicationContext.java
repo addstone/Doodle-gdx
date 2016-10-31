@@ -21,6 +21,30 @@ public class NoApplicationContext implements ApplicationContext
     }
 
     @Override
+    public void setCurrentStage(DoodleStage stage)
+    {
+
+    }
+
+    @Override
+    public void setRenderStage(boolean value)
+    {
+
+    }
+
+    @Override
+    public void setRenderRoom(boolean value)
+    {
+
+    }
+
+    @Override
+    public void setInputMode(InputMode inputMode)
+    {
+
+    }
+
+    @Override
     public EventDispatcher getEventDispatcher()
     {
         return noEventDispatcher;

@@ -8,5 +8,9 @@ import net.digaly.doodle.events.EventDispatcher;
 public interface ApplicationContext
 {
     void setCurrentRoom(Room room);
+    void setCurrentStage(DoodleStage stage);
+    void setRenderStage(boolean value);
+    void setRenderRoom(boolean value);
+    void setInputMode(InputMode inputMode);
     EventDispatcher getEventDispatcher();
 }

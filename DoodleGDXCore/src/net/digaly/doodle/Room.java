@@ -23,11 +23,11 @@ public class Room
     private Dimension size;
     private ApplicationContext applicationContext;
 
-    public Room(int width, int height, ApplicationContext context) {
+    public Room(int width, int height) {
         this.entities = new CopyOnWriteArrayList<>();
         this.size = new Dimension(width, height);
         this.background = new Sprite();
-        this.applicationContext = context;
+        this.applicationContext = new NoApplicationContext();
     }
 
     public void sortEntitiesByDepth() {
@@ -38,17 +38,7 @@ public class Room
         entity.setRoom(this);
         this.entities.add(entity);
 
-        if (entity instanceof KeyEventListener) {
-            applicationContext.getEventDispatcher().addKeyEventListener((KeyEventListener) entity);
-        }
-
-        if (entity instanceof MouseEventListener) {
-            applicationContext.getEventDispatcher().addMouseEventListener((MouseEventListener) entity);
-        }
-
-        if (entity instanceof UpdateListener) {
-            applicationContext.getEventDispatcher().addUpdateListener((UpdateListener) entity);
-        }
+        bindEventsTo(entity);
 
         sortEntitiesByDepth();
     }
@@ -57,17 +47,7 @@ public class Room
         entity.setRoom(new NoRoom());
         this.entities.remove(entity);
 
-        if (entity instanceof KeyEventListener) {
-            applicationContext.getEventDispatcher().removeKeyEventListener((KeyEventListener) entity);
-        }
-
-        if (entity instanceof MouseEventListener) {
-            applicationContext.getEventDispatcher().removeMouseEventListener((MouseEventListener) entity);
-        }
-
-        if (entity instanceof UpdateListener) {
-            applicationContext.getEventDispatcher().removeUpdateListener((UpdateListener) entity);
-        }
+        unbindEventsFrom(entity);
 
         sortEntitiesByDepth();
 
@@ -140,6 +120,48 @@ public class Room
 
     public void setApplicationContext(ApplicationContext applicationContext)
     {
+        unbindAllEvents();
         this.applicationContext = applicationContext;
+        bindAllEvents();
+    }
+
+    private void bindEventsTo(Entity entity) {
+        if (entity instanceof KeyEventListener) {
+            applicationContext.getEventDispatcher().addKeyEventListener((KeyEventListener) entity);
+        }
+
+        if (entity instanceof MouseEventListener) {
+            applicationContext.getEventDispatcher().addMouseEventListener((MouseEventListener) entity);
+        }
+
+        if (entity instanceof UpdateListener) {
+            applicationContext.getEventDispatcher().addUpdateListener((UpdateListener) entity);
+        }
+    }
+
+    private void unbindEventsFrom(Entity entity) {
+        if (entity instanceof KeyEventListener) {
+            applicationContext.getEventDispatcher().removeKeyEventListener((KeyEventListener) entity);
+        }
+
+        if (entity instanceof MouseEventListener) {
+            applicationContext.getEventDispatcher().removeMouseEventListener((MouseEventListener) entity);
+        }
+
+        if (entity instanceof UpdateListener) {
+            applicationContext.getEventDispatcher().removeUpdateListener((UpdateListener) entity);
+        }
+    }
+
+    private void unbindAllEvents() {
+        for (Entity entity : entities) {
+            unbindEventsFrom(entity);
+        }
+    }
+
+    private void bindAllEvents() {
+        for (Entity entity : entities) {
+            bindEventsTo(entity);
+        }
     }
 }

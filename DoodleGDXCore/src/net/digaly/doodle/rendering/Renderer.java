@@ -6,9 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import net.digaly.doodle.Entity;
-import net.digaly.doodle.NoRoom;
-import net.digaly.doodle.Room;
+import net.digaly.doodle.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +21,9 @@ public class Renderer
     private FitViewport viewport;
     private int targetWidth;
     private Room room;
+    private DoodleStage stage;
+    private boolean renderingRoom;
+    private boolean renderingStage;
 
     public Renderer()
     {
@@ -33,7 +34,10 @@ public class Renderer
         this.viewport = new FitViewport(this.targetWidth, this.targetWidth / ((float) Gdx.graphics.getWidth() / Gdx.graphics.getHeight()), camera);
         viewport.apply();
         this.camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+        this.renderingRoom = true;
+        this.renderingStage = true;
         this.room = new NoRoom();
+        this.stage = new NoDoodleStage();
     }
 
     public void render()
@@ -43,21 +47,34 @@ public class Renderer
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batch.begin();
 
-        room.getBackground().draw(batch);
-
-        for (Entity entity : room.getEntities())
+        if (isRenderingRoom())
         {
-            entity.getSprite().draw(batch);
+            System.out.println("I am rendering ze room");
+
+            batch.begin();
+
+            room.getBackground().draw(batch);
+
+            for (Entity entity : room.getEntities())
+            {
+                entity.getSprite().draw(batch);
+            }
+
+            batch.end();
         }
 
-        batch.end();
+        if (isRenderingStage())
+        {
+            stage.act();
+            stage.draw();
+        }
     }
 
     public void resize(int width, int height)
     {
-        viewport.update(width, height);
+        if (renderingRoom && !(room instanceof NoRoom)) viewport.update(width, height);
+        if (renderingStage && !(stage instanceof NoDoodleStage)) stage.getViewport().update(width, height, true);
         updateViewportSize();
     }
 
@@ -67,7 +84,8 @@ public class Renderer
         updateViewportSize();
     }
 
-    private void updateViewportSize() {
+    private void updateViewportSize()
+    {
         viewport.setWorldSize(targetWidth, targetWidth / ((float) Gdx.graphics.getWidth() / Gdx.graphics.getHeight()));
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
     }
@@ -80,5 +98,30 @@ public class Renderer
     public void setRoom(Room room)
     {
         this.room = room;
+    }
+
+    public void setStage(DoodleStage stage)
+    {
+        this.stage = stage;
+    }
+
+    public void setRenderingRoom(boolean renderingRoom)
+    {
+        this.renderingRoom = renderingRoom;
+    }
+
+    public void setRenderingStage(boolean renderingStage)
+    {
+        this.renderingStage = renderingStage;
+    }
+
+    public boolean isRenderingStage()
+    {
+        return renderingStage;
+    }
+
+    public boolean isRenderingRoom()
+    {
+        return renderingRoom;
     }
 }

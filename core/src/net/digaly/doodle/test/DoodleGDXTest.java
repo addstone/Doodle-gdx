@@ -10,9 +10,11 @@ public class DoodleGDXTest extends DoodleApplication
     @Override
     public void onApplicationStart()
     {
-        setCurrentRoom(new TestRoom(this));
+        setCurrentRoom(new TestRoom());
+        setCurrentStage(new MenuStage());
+        setRenderStage(true);
         Music menuMusic = Gdx.audio.newMusic(Gdx.files.internal("menu.ogg"));
         menuMusic.setLooping(true);
-        menuMusic.play();
+        //menuMusic.play();
     }
 }

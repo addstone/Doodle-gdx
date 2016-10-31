@@ -16,6 +16,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import net.digaly.doodle.Entity;
+import net.digaly.doodle.InputMode;
 import net.digaly.doodle.Point;
 import net.digaly.doodle.events.KeyState;
 import net.digaly.doodle.events.MouseState;
@@ -116,6 +117,9 @@ public class PlayerEntity extends Entity implements KeyEventListener, UpdateList
                 case Input.Keys.SPACE:
                     shoot();
                     break;
+                case Input.Keys.P:
+                    getRoom().getApplicationContext().setInputMode(InputMode.STAGE);
+                    break;
             }
         }
     }
@@ -148,6 +152,7 @@ public class PlayerEntity extends Entity implements KeyEventListener, UpdateList
         //if (getPosition().y + targetTranslateY > 0 && getPosition().y + targetTranslateY < getRoom().getSize().getHeight()) {
              //setPosition(new Point(getPosition().x, getPosition().y + (float) (Math.sin(getAngle() * 0.017) * speed)));
         //}
+
 
         //Speed limiting
         if (speed > 6)

@@ -7,6 +7,6 @@ public class NoRoom extends Room
 {
     public NoRoom()
     {
-        super(0, 0, new NoApplicationContext());
+        super(0, 0);
     }
 }

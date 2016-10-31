@@ -10,9 +10,9 @@ import net.digaly.doodle.Room;
  */
 public class TestRoom extends Room
 {
-    public TestRoom(ApplicationContext context)
+    public TestRoom()
     {
-        super(800, 600, context);
+        super(800, 600);
 
         setBackgroundFromFilename("bg-crumplesquare.png");
 
