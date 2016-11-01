@@ -23,6 +23,7 @@ import net.digaly.doodle.events.MouseState;
 import net.digaly.doodle.events.listeners.KeyEventListener;
 import net.digaly.doodle.events.listeners.MouseEventListener;
 import net.digaly.doodle.events.listeners.UpdateListener;
+import net.digaly.doodle.rendering.AnimatedSprite;
 
 
 import java.util.ArrayList;
@@ -67,6 +68,7 @@ public class PlayerEntity extends Entity implements KeyEventListener, UpdateList
         spriteBullet = bulletTexture;
 
         getSprite().setTexture(spriteNone);
+        setSprite(new AnimatedSprite(new Texture("cow_sheet.png"), 64, 64, 4, 1, 0.1f, true));
         //getSprite().setColor(com.badlogic.gdx.graphics.Color.RED);
 
         random = new Random();
@@ -178,6 +180,8 @@ public class PlayerEntity extends Entity implements KeyEventListener, UpdateList
         getSprite().setTexture(spriteNone);
 
         if (shootDelay > 0) shootDelay -= 1;
+
+        getRoom().getApplicationContext().getRenderer().getCamera().position.set(getSprite().getX(), getSprite().getY(), 0);
     }
 
     @Override

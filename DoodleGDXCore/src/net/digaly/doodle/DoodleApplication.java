@@ -121,6 +121,12 @@ public abstract class DoodleApplication extends ApplicationAdapter implements Ap
     }
 
     @Override
+    public Renderer getRenderer()
+    {
+        return this.renderer;
+    }
+
+    @Override
     public EventDispatcher getEventDispatcher()
     {
         return this.eventDispatcher;

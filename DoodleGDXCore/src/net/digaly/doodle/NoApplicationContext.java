@@ -2,6 +2,9 @@ package net.digaly.doodle;
 
 import net.digaly.doodle.events.EventDispatcher;
 import net.digaly.doodle.events.NoEventDispatcher;
+import net.digaly.doodle.rendering.Renderer;
+
+import javax.management.RuntimeErrorException;
 
 /**
  * Created by Tom Dobbelaere on 30/10/2016.
@@ -44,9 +47,19 @@ public class NoApplicationContext implements ApplicationContext
 
     }
 
+    /*
+    We allow attaching events to NoEventDispatchers because this is commonly done in the constructor of a room
+    When the application context changes, events are rebound anyway
+    */
     @Override
     public EventDispatcher getEventDispatcher()
     {
         return noEventDispatcher;
+    }
+
+    @Override
+    public Renderer getRenderer()
+    {
+        throw new RuntimeException("Cannot get renderer because there is no application context!");
     }
 }
